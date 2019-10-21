@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <div id="vue-1">
+      {{
+        message
+          .split("")
+          .reverse()
+          .join("")
+      }}
+      <!-- 템플렛내에 표현식을 넣으면 편리하지만 , 간단한 연산일 때만 사용하는것이 좋기 때문에 너무 많은 연산을 템플릿 안에 하면 코드가 비대해지고 유지보수가 어렵다 -->
+
+      <p>원본 메세지: "{{ message }}</p>
+      <p>역순으로 표시한 메세지 : {{ reversemessage }}</p>
+    </div>
+
+    <div id="vue-2">
+      <p>computed vs method 의 차이점</p>
+      <p>{{ computed_now }}</p>
+
+      <button v-on:click="methods_now">눌러</button>
+      <p>{{ now }}</p>
+      <p>
+        이렇듯 computed의 특징은 종속 대상을 따라 저장(캐싱) 된다는 것 그래서
+        Date.now()처럼 아무 곳에도 의존하지 않는 computed 속성의 경우 절대로
+        업데이트되지 않는다는 뜻입니다. (computed 는 종속된 대상이 변경될 때만
+        함수를 실행한다는거)
+      </p>
+    </div>
+
+    <div id="demo">
+      <p>computed vs watch의 차이점</p>
+      <!-- 아직 잘 모르겠다. 단순히 computed를 쓰는게 더 좋다는거? -->
+      {{ fullName }}
+      <p>
+        이렇듯 watch를 사용하는것보다 일반적으로 computed를 사용하는것이 더 좋다
+      </p>
+    </div>
+
+    <p>watch를 쓰는 이유</p>
+    <p>
+      비동기 연산 (API 엑세스)를 수행하고, 우리가 그 연산을 얼마나 자주
+      수행하는지 제한하고, 최종 응답을 얻을 때까지 중간 상태를 설정할 수
+      있습니다.
+    </p>
+
+    <script>
+      var vm = new Vue({
+        el: "#vue-1",
+        data: {
+          message: "안녕하세요"
+        },
+        computed: {
+          reversemessage: function() {
+            return this.message
+              .split("")
+              .reverse()
+              .join("");
+          }
+        }
+      });
+
+      var vm2 = new Vue({
+        el: "#vue-2",
+        data: {
+          now: ""
+        },
+        computed: {
+          computed_now: function() {
+            return Date.now();
+          }
+        },
+        methods: {
+          methods_now: function() {
+            this.now = Date.now();
+          }
+        }
+      });
+
+      //   var vm3 = new Vue({
+      //     el: "#demo",
+      //     data: {
+      //       firstName: "Foo",
+      //       lastName: "Bar",
+      //       fullName: "Foo Bar"
+      //     },
+      //     watch: {
+      //       firstName: function(val) {
+      //         this.fullName = val + " " + this.lastName;
+      //       },
+      //       lastName: function(val) {
+      //         this.fullName = this.firstName + " " + val;
+      //       }
+      //     }
+      //   });
+
+      var vm = new Vue({
+        el: "#demo",
+        data: {
+          firstName: "Foo",
+          lastName: "Bar"
+        },
+        computed: {
+          fullName: function() {
+            return this.firstName + " " + this.lastName;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
